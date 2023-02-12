@@ -98,5 +98,92 @@ void unmanagedFunc() { $unmanaged
 }
 ```
 
+# Example
+
+<details>
+
+<summary>Expand code</summary>
+
+```c
+#include "objectc.h"
+
+
+
+$class(String) {
+    ObjectC* object;
+    char* string;
+};
+
+$class(Test) {
+    ObjectC* object;
+    void (*print)(String* str);
+};
+
+$destructor(String) {
+    $instance(String);
+
+    free(this->string);
+
+    $free;
+}
+
+$constructor(String, char* str) {
+    $create(String);
+
+    if(str) {
+        this->string = malloc(strlen(str)*sizeof(char)+1);
+        strcpy(this->string, str);
+    } else {
+        this->string = malloc(1);
+        this->string[1] = 0;
+    }
+
+    $return;
+}
+
+
+void Test_print(String* str) {
+    $instance(Test);
+    String* cat = $new(String)("\n\nTest concat string: \n\n");
+    printf("%s%s", str->string, cat->string);
+}
+
+$class(TestSub) {
+    ObjectC* object;
+};
+
+$default_destructor(TestSub);
+$constructor(TestSub) {
+    $create(TestSub);
+    $return;
+};
+
+$default_destructor(Test);
+$constructor(Test) {
+    $create(Test);
+
+    Test* obj = $new(TestSub)();
+    $func(Test,print);
+
+    $return;
+};
+
+
+
+int main() { $managed
+
+    Test* obj = $new(Test)();
+    Test* obj2 = $new(Test)();
+    String* str = $new(String)("String str test");
+
+    $(obj)->print(str); // creates new String "\n\nTest concat string: \n\n" and concats with {str}
+
+    $free;
+    return 0;
+}
+```
+
+</details>
+
 # License
 This program is licensed under the MIT license.

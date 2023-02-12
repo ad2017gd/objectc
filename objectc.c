@@ -1,3 +1,27 @@
+/*
+MIT License
+
+Copyright (c) 2023 ad
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 #include "objectc.h"
 
 #if __DEBUG_OBJECTC == 1
@@ -33,18 +57,23 @@ void ReferenceList_add(void* instance) {
 
     $o(instance)->__parentRefList = this;
     $o(instance)->__parentRefIndex = found;
-
+#if __DEBUG_OBJECTC == 1
     printf("ObjectC: Added reference {%s} for {%s} at index %d\n", $o(instance)->name, this->parentInstance->object->name, found);
+#endif
 
 }
 
 void ReferenceList_free() {
     $instance(ReferenceList);
+#if __DEBUG_OBJECTC == 1
     printf("ObjectC: Freeing {%s}'s %d items\n", this->parentInstance->object->name, this->size);
+#endif
     for(size_t i = 0; i < this->size; i++) {
         
         if(this->instances[i] != 0) {
+#if __DEBUG_OBJECTC == 1
             printf("    ObjectC: Freeing {%s} at [%p]\n", this->instances[i]->object->name, this->instances[i]);
+#endif
             if(this->instances[i]->object->destruct) 
                 $(this->instances[i])->object->destruct();
             this->instances[i] = 0;

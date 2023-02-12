@@ -64,12 +64,12 @@ $interface(BaseObject) {
 
 #define $constructor(CLASSNAME, ...) CLASSNAME* CLASSNAME ## __const (__VA_ARGS__)
 
-#define $$createBase(CLASSNAME) CLASSNAME* this = (CLASSNAME*)malloc(sizeof(CLASSNAME)); \
+#define $$create_base(CLASSNAME) CLASSNAME* this = (CLASSNAME*)malloc(sizeof(CLASSNAME)); \
 memset(this, 0, sizeof(CLASSNAME)); \
 this->object = (ObjectC*)malloc(sizeof(ObjectC)); \
 
 
-#define $create(CLASSNAME) $$createBase(CLASSNAME); \
+#define $create(CLASSNAME) $$create_base(CLASSNAME); \
 this->object->name = # CLASSNAME; \
 this->object->destruct = CLASSNAME ## _destruct; \
 if(__objectc_prevref != 0) $(__objectc_prevref)->add(this); \
@@ -77,7 +77,7 @@ this->object->__refList = $new(ReferenceList)(this);
 
 
 #define $unmanaged BaseObject* this = 0;
-#define $managed $$createBase(BaseObject); \
+#define $managed $$create_base(BaseObject); \
 this->object->name = __FILE__ ":" _OBJ_STRINGIFY(__LINE__) ; \
 this->object->__refList = $new(ReferenceList)(this);
 

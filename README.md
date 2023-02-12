@@ -107,13 +107,10 @@ void unmanagedFunc() { $unmanaged
 ```c
 #include "objectc.h"
 
-
-
 $class(String) {
     ObjectC* object;
     char* string;
 };
-
 $class(Test) {
     ObjectC* object;
     void (*print)(String* str);
@@ -141,7 +138,6 @@ $constructor(String, char* str) {
     $return;
 }
 
-
 void Test_print(String* str) {
     $instance(Test);
     String* cat = $new(String)("\n\nTest concat string: \n\n");
@@ -167,8 +163,6 @@ $constructor(Test) {
 
     $return;
 };
-
-
 
 int main() { $managed
 

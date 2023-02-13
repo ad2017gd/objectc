@@ -4,6 +4,23 @@
 
 </div>
 
+- [Dependencies](#dependencies)
+- [Case style](#case-style)
+- [Classes](#classes)
+  - [Instantiating a class](#instantiating-a-class)
+  - [Defining a class](#defining-a-class)
+  - [Function implementations](#function-implementations)
+  - [Using functions](#using-functions)
+  - [Constructors](#constructors)
+  - [Destructors](#destructors)
+  - [Freeing an instance](#freeing-an-instance)
+  - [Builtin classes](#builtin-classes)
+    - [BaseObject](#baseobject)
+    - [ManagedAlloc](#managedalloc)
+- [Managed and unmanaged functions](#managed-and-unmanaged-functions)
+- [Example](#example)
+- [License](#license)
+
 # Dependencies
 This library assumes you have a `malloc` and a `printf` (for __DEBUG_OBJECTC=1 only) implementation.
 

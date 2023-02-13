@@ -118,10 +118,10 @@ ManagedAlloc allows you to use malloc safely by automatically freeing the alloca
 Use ManagedAlloc with the `$malloc(size)` and `$realloc(managedAllocInstance, newSize)` macros. Allocated memory pointer is available in the "mem" member of this class.
 ```c
 int main() { $managed
-    char* str = $malloc(3);
+    ManagedAlloc* str = $malloc(3);
     strcpy(str->mem, "hi");
 
-    $free; // <--- Now "str" is freed.
+    $free; // <--- Now "str->mem" is freed.
     return 0;
 }
 ```

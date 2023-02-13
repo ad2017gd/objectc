@@ -119,9 +119,13 @@ Use ManagedAlloc with the `$malloc(size)` and `$realloc(managedAllocInstance, ne
 ```c
 int main() { $managed
     ManagedAlloc* str = $malloc(3);
+    ManagedAlloc* strsp = $malloc(2);
+    ManagedAlloc* str2 = $malloc(9);
     strcpy(str->mem, "hi");
+    strcpy(strsp->mem, " ");
+    strcpy(str2->mem, "everyone");
 
-    $free; // <--- Now "str->mem" is freed.
+    $free; // <--- Now all allocated memory is freed.
     return 0;
 }
 ```

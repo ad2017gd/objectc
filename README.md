@@ -100,6 +100,30 @@ void unmanagedFunc() { $unmanaged
 }
 ```
 
+## Builtin classes
+Currently, objectc implements the `BaseObject` and `ManagedAlloc` classes.
+### BaseObject
+BaseObject is similar to the "object" in JavaScript. It is the most basic class and by definition every other class extends it
+(that's why you have to start every class definition with `ObjectC* object`);
+```c
+$interface(BaseObject) {
+  ObjectC* object;
+}
+```
+### ManagedAlloc
+ManagedAlloc allows you to use malloc safely by automatically freeing the allocated memory using the reference counter.
+
+Use ManagedAlloc with the `$malloc(size)` and `$realloc(managedAllocInstance, newSize)` macros. Allocated memory pointer is available in the "mem" member of this class.
+```c
+int main() { $managed
+    char* str = $malloc(3);
+    strcpy(str->mem, "hi");
+
+    $free; // <--- Now "str" is freed.
+    return 0;
+}
+```
+
 # Example
 
 <details>

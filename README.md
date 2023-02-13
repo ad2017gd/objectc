@@ -151,7 +151,7 @@ void unmanagedFunc() { $unmanaged
 
 <details>
 
-<summary>Expand code</summary>
+<summary>Random multi-class code (Expand)</summary>
 
 ```c
 #include "objectc.h"
@@ -220,6 +220,59 @@ int main() { $managed
     String* str = $new(String)("String str test");
 
     $(obj)->print(str); // creates new String "\n\nTest concat string: \n\n" and concats with {str}
+
+    $free;
+    return 0;
+}
+```
+
+</details>
+
+<details>
+<summary>String library (Expand)</summary>
+
+```c
+#include "objectc.h"
+#include <stdio.h>
+
+
+$class(String) {
+    ObjectC* object;
+    ManagedAlloc* __string;
+    void (*print)();
+    void (*concat)(String* concat);
+};
+$default_destructor(String);
+
+void String_print() {
+    $instance(String);
+    printf("%s", this->__string->mem);
+}
+
+void String_concat(String* concat) {
+    $instance(String);
+    size_t newLen = strlen(this->__string->mem) + strlen(concat->__string->mem) + 1;
+    this->__string = $realloc(this->__string, newLen);
+    strcat(this->__string->mem, concat->__string->mem);
+
+}
+
+$constructor(String, char* str) {
+    $create(String);
+    if(str != 0) {
+        this->__string = $malloc(strlen(str)+1);
+        strcpy(this->__string->mem, str);
+    }
+    $func(String,print);
+    $func(String,concat);
+    $return;
+}
+
+
+int main() { $managed
+    String* str = $new(String)("hello");
+    $(str)->concat($new(String)(" brozer!\n"));
+    $(str)->print();
 
     $free;
     return 0;

@@ -26,17 +26,25 @@ SOFTWARE.
 #include <string.h>
 
 #define __DEBUG_OBJECTC 0
+#define INSTANCE_STACK_SIZE 16
 
 #ifndef __objectc_this
-void* __objectc_this;
+void* __objectc_this[INSTANCE_STACK_SIZE];
 #endif
+
+
+
+void* __objectc_pop(void** arr);
+void __objectc_push(void** arr, void* elem);
+
+
 
 #define _OBJ_STR(x) #x
 #define _OBJ_STRINGIFY(x) _OBJ_STR(x)
 
 
-#define $(s) ((__objectc_this = s),s)
-#define $instance(CLASSNAME) CLASSNAME* this = (CLASSNAME*)__objectc_this
+#define $(s) (__objectc_push((void*)__objectc_this, s),s)
+#define $instance(CLASSNAME) CLASSNAME* this = (CLASSNAME*)__objectc_pop((void*)__objectc_this); __objectc_pop((void*)__objectc_prevref)
 
 #define $typedef(CLASSNAME) typedef struct CLASSNAME CLASSNAME
 $typedef(ReferenceList);
@@ -56,8 +64,9 @@ $interface(BaseObject) {
     ObjectC* object;
 };
 
+
  
-#define $new(CLASSNAME) (this != 0 ? (__objectc_prevref = $(this)->object->__refList) : (__objectc_prevref = 0), CLASSNAME ## __const)
+#define $new(CLASSNAME) (this != 0 ? (__objectc_push((void*)__objectc_prevref, this->object->__refList)) : (0), CLASSNAME ## __const)
 #define $$const(CLASSNAME) CLASSNAME ## __const
 
 #define $ref(CLASSNAME) struct CLASSNAME *
@@ -70,9 +79,10 @@ this->object = (ObjectC*)malloc(sizeof(ObjectC)); \
 
 
 #define $create(CLASSNAME) $$create_base(CLASSNAME); \
-this->object->name = # CLASSNAME; \
+this->object->name = _OBJ_STRINGIFY(CLASSNAME); \
 this->object->destruct = CLASSNAME ## _destruct; \
-if(__objectc_prevref != 0) $(__objectc_prevref)->add(this); \
+ReferenceList* __prevref = __objectc_pop((void*)__objectc_prevref); \
+if(__prevref != 0) $(__prevref)->add(this); \
 this->object->__refList = $new(ReferenceList)(this);
 
 
@@ -88,6 +98,7 @@ this->object->__refList = $new(ReferenceList)(this);
 #define $return return this
 #define $delete(INSTANCE) $(INSTANCE)->object->destruct(); 
 #define $free $(this->object->__refList)->free(); free(this); this = 0 
+
 
 #define $default_destructor(CLASSNAME) $destructor(CLASSNAME) { \
     $instance(CLASSNAME); \
@@ -109,6 +120,17 @@ $constructor(ReferenceList);
 $destructor(ReferenceList);
 
 
+
+$class(ManagedAlloc) {
+    ObjectC* object;
+    void* mem;
+};
+
+$destructor(ManagedAlloc);
+$constructor(ManagedAlloc, size_t size);
+#define $malloc(SIZE) $new(ManagedAlloc)(SIZE)
+#define $realloc(WHAT,SIZE) realloc(WHAT,SIZE)
+
 #ifndef __objectc_prevref
-ReferenceList* __objectc_prevref;
+ReferenceList* __objectc_prevref[INSTANCE_STACK_SIZE];
 #endif

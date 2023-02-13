@@ -107,3 +107,48 @@ $constructor(ReferenceList, void* parentInstance) {
 
     $return;
 }
+$destructor(ManagedAlloc) {
+    $instance(ManagedAlloc);
+
+    free(this->mem);
+
+    $free;
+}
+$constructor(ManagedAlloc, size_t size){
+    $create(ManagedAlloc);
+    this->mem = malloc(size);
+    $return;
+}
+
+
+void* __objectc_pop(void** arr) {
+
+    int last = 0;
+    for(int i = 0; i < INSTANCE_STACK_SIZE; i++) {
+        if(arr[i] != 0) last = i;
+    }
+    void* lastptr = arr[last];
+#ifdef __DEBUG_OBJECTC
+    //printf("            Popping %d from %s stack\n", last, arr == __objectc_prevref ? "reference" : "instance");
+#endif
+    arr[last] = 0;
+    return lastptr;
+}
+void __objectc_push(void** arr, void* elem) {
+
+    int last = 0;
+    for(int i = 0; i < INSTANCE_STACK_SIZE; i++) {
+        if(arr[i] != 0) last = i;
+    }
+    if(last == INSTANCE_STACK_SIZE - 1) {
+        for(int i = 0; i < INSTANCE_STACK_SIZE; i++) {
+            arr[i] = 0;
+        }
+        arr[0] = elem;
+    } else {
+        arr[last+1] = elem;
+    }
+#ifdef __DEBUG_OBJECTC
+   // printf("            Pushing %d to %s stack\n", last, arr == __objectc_prevref ? "reference" : "instance");
+#endif
+}

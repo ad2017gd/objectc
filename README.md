@@ -84,21 +84,6 @@ Freeing an instance calls the destructor and frees all references inside recursi
 $delete(calculator);
 ```
 
-# Managed and unmanaged functions
-All non-class (or static) functions **MUST** be prepended with `$managed` or `$unmanaged` to access ObjectC functionality.
-
-Managed functions keep track of created instances and can be freed at the end.
-
-```c
-void managedFunc() { $managed
-  Obj* object = $new(Obj)();
-  $free; // free all references in this function
-}
-Obj* global;
-void unmanagedFunc() { $unmanaged
-  global = $new(Obj)();
-}
-```
 
 ## Builtin classes
 Currently, objectc implements the `BaseObject` and `ManagedAlloc` classes.
@@ -123,6 +108,23 @@ int main() { $managed
     return 0;
 }
 ```
+
+# Managed and unmanaged functions
+All non-class (or static) functions **MUST** be prepended with `$managed` or `$unmanaged` to access ObjectC functionality.
+
+Managed functions keep track of created instances and can be freed at the end.
+
+```c
+void managedFunc() { $managed
+  Obj* object = $new(Obj)();
+  $free; // free all references in this function
+}
+Obj* global;
+void unmanagedFunc() { $unmanaged
+  global = $new(Obj)();
+}
+```
+
 
 # Example
 

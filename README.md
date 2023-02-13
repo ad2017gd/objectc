@@ -1,5 +1,7 @@
 <div align="center">
-<h1> objectc - Macro and runtime library for Object Oriented Programming in C</h2>
+<h1> objectc - Macro and runtime library for Object Oriented Programming in C</h1>
+<img height=200px src="https://user-images.githubusercontent.com/39013925/218322848-fd48ca27-692d-4ba6-91cc-368ec484fbd1.png">
+
 </div>
 
 # Dependencies

@@ -63,7 +63,7 @@ double Calculator_add(double val/*, ...*/) {
 Your average OOP implementation in C uses an argument to pass the instance to the function. This library uses a macro
 that assigns the instance to a global variable and is later retrieved in the function.
 
-**This makes this library thread unsafe!**
+**This makes this library thread unsafe!** maybe use a lock?
 
 ```c
 // $(...) is very important when calling functions!
